@@ -12,25 +12,37 @@ T = TypeVar("T", bound="DomainRecordRequest")
 
 @attr.s(auto_attribs=True)
 class DomainRecordRequest:
-    """If this is used to update an existing DomainRecord any values not provided will be retained. Provide empty strings
-    to clear existing string values, nulls to retain the existing values.
+    """
+    Attributes:
+        type (DomainRecordType): The type of the DNS record.
 
-        Attributes:
-            type (Union[Unset, None, DomainRecordType]): The type of the DNS record.
-            name (Union[Unset, None, str]): The subdomain for this record. Use @ for records on the domain itself, and * to
-                create a wildcard record.
-            data (Union[Unset, None, str]): A general data field that has different functions depending on the record type.
-            priority (Union[Unset, None, int]): A priority value that is only relevant for SRV and MX records.
-            port (Union[Unset, None, int]): A port value that is only relevant for SRV records.
-            ttl (Union[Unset, None, int]): This value is the time to live for the record, in seconds.
-            weight (Union[Unset, None, int]): The weight value that is only relevant for SRV records.
-            flags (Union[Unset, None, int]): An unsigned integer between 0-255 that is only relevant for CAA records.
-            tag (Union[Unset, None, str]): A parameter tag that is only relevant for CAA records.
+            | Value | Description |
+            | ----- | ----------- |
+            | A | Map an IPv4 address to a hostname. |
+            | AAAA | Map an IPv6 address to a hostname. |
+            | CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+            | CNAME | Define an alias for your canonical hostname. |
+            | MX | Define the mail exchanges that handle mail for the domain. |
+            | NS | Define the nameservers that manage the domain. |
+            | SOA | The Start of Authority record for the zone. |
+            | SRV | Specify a server by hostname and port to handle a service or services. |
+            | TXT | Define a string of text that is associated with a hostname. |
+
+        name (str): The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard
+            record.
+        data (str): A general data field that has different functions depending on the record type.
+        priority (Union[Unset, None, int]): A priority value that is only relevant for SRV and MX records.
+        port (Union[Unset, None, int]): A port value that is only relevant for SRV records.
+        ttl (Union[Unset, None, int]): This value is the time to live for the record, in seconds. The default and only
+            supported value is 3600. Leave null to accept this default.
+        weight (Union[Unset, None, int]): The weight value that is only relevant for SRV records.
+        flags (Union[Unset, None, int]): An unsigned integer between 0-255 that is only relevant for CAA records.
+        tag (Union[Unset, None, str]): A parameter tag that is only relevant for CAA records.
     """
 
-    type: Union[Unset, None, DomainRecordType] = UNSET
-    name: Union[Unset, None, str] = UNSET
-    data: Union[Unset, None, str] = UNSET
+    type: DomainRecordType
+    name: str
+    data: str
     priority: Union[Unset, None, int] = UNSET
     port: Union[Unset, None, int] = UNSET
     ttl: Union[Unset, None, int] = UNSET
@@ -40,9 +52,7 @@ class DomainRecordRequest:
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        type: Union[Unset, None, str] = UNSET
-        if not isinstance(self.type, Unset):
-            type = self.type.value if self.type else None
+        type = self.type.value
 
         name = self.name
         data = self.data
@@ -55,13 +65,13 @@ class DomainRecordRequest:
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if type is not UNSET:
-            field_dict["type"] = type
-        if name is not UNSET:
-            field_dict["name"] = name
-        if data is not UNSET:
-            field_dict["data"] = data
+        field_dict.update(
+            {
+                "type": type,
+                "name": name,
+                "data": data,
+            }
+        )
         if priority is not UNSET:
             field_dict["priority"] = priority
         if port is not UNSET:
@@ -80,18 +90,11 @@ class DomainRecordRequest:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        _type = d.pop("type", UNSET)
-        type: Union[Unset, None, DomainRecordType]
-        if _type is None:
-            type = None
-        elif isinstance(_type, Unset):
-            type = UNSET
-        else:
-            type = DomainRecordType(_type)
+        type = DomainRecordType(d.pop("type"))
 
-        name = d.pop("name", UNSET)
+        name = d.pop("name")
 
-        data = d.pop("data", UNSET)
+        data = d.pop("data")
 
         priority = d.pop("priority", UNSET)
 

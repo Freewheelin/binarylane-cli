@@ -1,39 +1,30 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, cast
 
 import attr
 
-from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
-
-T = TypeVar("T", bound="ForwardingRule")
+T = TypeVar("T", bound="DomainRefreshRequest")
 
 
 @attr.s(auto_attribs=True)
-class ForwardingRule:
+class DomainRefreshRequest:
     """
     Attributes:
-        entry_protocol (LoadBalancerRuleProtocol): The protocol that traffic must match for this load balancer to
-            forward traffic according to this rule.
-
-            | Value | Description |
-            | ----- | ----------- |
-            | http | The load balancer will forward HTTP traffic that matches this rule. |
-            | https | The load balancer will forward HTTPS traffic that matches this rule. |
-
+        domain_names (List[str]): The domain names to refresh.
     """
 
-    entry_protocol: LoadBalancerRuleProtocol
+    domain_names: List[str]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        entry_protocol = self.entry_protocol.value
+        domain_names = self.domain_names
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "entry_protocol": entry_protocol,
+                "domain_names": domain_names,
             }
         )
 
@@ -42,14 +33,14 @@ class ForwardingRule:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        entry_protocol = LoadBalancerRuleProtocol(d.pop("entry_protocol"))
+        domain_names = cast(List[str], d.pop("domain_names"))
 
-        forwarding_rule = cls(
-            entry_protocol=entry_protocol,
+        domain_refresh_request = cls(
+            domain_names=domain_names,
         )
 
-        forwarding_rule.additional_properties = d
-        return forwarding_rule
+        domain_refresh_request.additional_properties = d
+        return domain_refresh_request
 
     @property
     def additional_keys(self) -> List[str]:

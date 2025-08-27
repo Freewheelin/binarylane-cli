@@ -52,18 +52,32 @@ class Command(CommandRunner):
         json_body.add(
             PrimitiveAttribute(
                 "type",
-                Union[Unset, None, DomainRecordType],
-                required=False,
+                DomainRecordType,
+                required=True,
                 option_name="type",
-                description="""The type of the DNS record.""",
+                description="""The type of the DNS record.
+
+| Value | Description |
+| ----- | ----------- |
+| A | Map an IPv4 address to a hostname. |
+| AAAA | Map an IPv6 address to a hostname. |
+| CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+| CNAME | Define an alias for your canonical hostname. |
+| MX | Define the mail exchanges that handle mail for the domain. |
+| NS | Define the nameservers that manage the domain. |
+| SOA | The Start of Authority record for the zone. |
+| SRV | Specify a server by hostname and port to handle a service or services. |
+| TXT | Define a string of text that is associated with a hostname. |
+
+""",
             )
         )
 
         json_body.add(
             PrimitiveAttribute(
                 "name",
-                Union[Unset, None, str],
-                required=False,
+                str,
+                required=True,
                 option_name="name",
                 description="""The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard record.""",
             )
@@ -72,8 +86,8 @@ class Command(CommandRunner):
         json_body.add(
             PrimitiveAttribute(
                 "data",
-                Union[Unset, None, str],
-                required=False,
+                str,
+                required=True,
                 option_name="data",
                 description="""A general data field that has different functions depending on the record type.""",
             )
@@ -105,7 +119,7 @@ class Command(CommandRunner):
                 Union[Unset, None, int],
                 required=False,
                 option_name="ttl",
-                description="""This value is the time to live for the record, in seconds.""",
+                description="""This value is the time to live for the record, in seconds. The default and only supported value is 3600. Leave null to accept this default.""",
             )
         )
 

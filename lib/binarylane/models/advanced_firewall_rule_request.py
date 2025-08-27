@@ -8,11 +8,11 @@ from binarylane.models.advanced_firewall_rule_action import AdvancedFirewallRule
 from binarylane.models.advanced_firewall_rule_protocol import AdvancedFirewallRuleProtocol
 from binarylane.types import UNSET, Unset
 
-T = TypeVar("T", bound="AdvancedFirewallRule")
+T = TypeVar("T", bound="AdvancedFirewallRuleRequest")
 
 
 @attr.s(auto_attribs=True)
-class AdvancedFirewallRule:
+class AdvancedFirewallRuleRequest:
     """
     Attributes:
         source_addresses (List[str]): The source addresses to match for this rule. Each address may be an individual
@@ -99,7 +99,7 @@ class AdvancedFirewallRule:
 
         description = d.pop("description", UNSET)
 
-        advanced_firewall_rule = cls(
+        advanced_firewall_rule_request = cls(
             source_addresses=source_addresses,
             destination_addresses=destination_addresses,
             protocol=protocol,
@@ -108,8 +108,8 @@ class AdvancedFirewallRule:
             description=description,
         )
 
-        advanced_firewall_rule.additional_properties = d
-        return advanced_firewall_rule
+        advanced_firewall_rule_request.additional_properties = d
+        return advanced_firewall_rule_request
 
     @property
     def additional_keys(self) -> List[str]:

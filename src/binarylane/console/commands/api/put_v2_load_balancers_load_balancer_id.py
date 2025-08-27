@@ -17,6 +17,8 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_load_balancers as api_get_v2_load_balancers
+import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
 from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
@@ -38,13 +40,18 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def lookup_load_balancer_id(ref: str) -> Union[None, int]:
+            return api_get_v2_load_balancers.Command(self._context).lookup(ref)
+
         mapping.add(
             PrimitiveAttribute(
                 "load_balancer_id",
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the load balancer to update.""",
+                metavar="load_balancer",
+                description="""The ID or name of the load balancer to update.""",
+                lookup=lookup_load_balancer_id,
             )
         )
 
@@ -76,7 +83,14 @@ class Command(CommandRunner):
                 LoadBalancerRuleProtocol,
                 required=True,
                 option_name="entry-protocol",
-                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.
+
+| Value | Description |
+| ----- | ----------- |
+| http | The load balancer will forward HTTP traffic that matches this rule. |
+| https | The load balancer will forward HTTPS traffic that matches this rule. |
+
+""",
             )
         )
 
@@ -96,7 +110,15 @@ class Command(CommandRunner):
                 Union[Unset, None, HealthCheckProtocol],
                 required=False,
                 option_name="protocol",
-                description="""Leave null to accept the default HTTP protocol.""",
+                description="""Leave null to accept the default HTTP protocol.
+
+| Value | Description |
+| ----- | ----------- |
+| http | The health check will be performed via HTTP. |
+| https | The health check will be performed via HTTPS. |
+| both | The health check will be performed via both HTTP and HTTPS. Failing a health check on one protocol will remove the server from the pool of servers only for that protocol. |
+
+""",
             )
         )
 
@@ -110,13 +132,18 @@ class Command(CommandRunner):
             )
         )
 
+        def lookup_server_id(ref: str) -> Union[None, int]:
+            return api_get_v2_servers.Command(self._context).lookup(ref)
+
         json_body.add(
             PrimitiveAttribute(
                 "server_ids",
                 Union[Unset, None, List[int]],
                 required=False,
-                option_name="server-ids",
-                description="""A list of server IDs to assign to this load balancer.""",
+                option_name=("servers", "server-ids"),
+                metavar="servers",
+                description="""A list of server ID or names to assign to this load balancer.""",
+                lookup=lookup_server_id,
             )
         )
 

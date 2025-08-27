@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## v0.20.0 (2025-07-22)
+
+### Features
+
+- add x-cli-lookup attribute to load-balancer and vpc (#69)
+- support x-cli-lookup attribute on request body properties (#68)
+
+## v0.19.0 (2025-04-04)
+
+### Bug Fixes
+
+- output action properties at completion of command runner (#62)
+- resolve exception when action ID is passed to printer formatter
+
+### Features
+
+- include action_id in formatted output of response containing ActionLink
+
 ## v0.18.0 (2025-02-28)
 
 ## v0.17.0 (2025-02-12)

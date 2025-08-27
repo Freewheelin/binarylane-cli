@@ -4,10 +4,10 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.domains.put_v2_domains_domain_name_records_record_id import sync_detailed
-from binarylane.models.domain_record_request import DomainRecordRequest
 from binarylane.models.domain_record_response import DomainRecordResponse
 from binarylane.models.domain_record_type import DomainRecordType
 from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.update_domain_record_request import UpdateDomainRecordRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Unset
 
@@ -21,9 +21,9 @@ from binarylane.console.runners.command import CommandRunner
 class CommandRequest:
     domain_name: Union[int, str]
     record_id: int
-    json_body: DomainRecordRequest
+    json_body: UpdateDomainRecordRequest
 
-    def __init__(self, domain_name: Union[int, str], record_id: int, json_body: DomainRecordRequest) -> None:
+    def __init__(self, domain_name: Union[int, str], record_id: int, json_body: UpdateDomainRecordRequest) -> None:
         self.domain_name = domain_name
         self.record_id = record_id
         self.json_body = json_body
@@ -56,7 +56,7 @@ class Command(CommandRunner):
             )
         )
 
-        json_body = mapping.add_json_body(DomainRecordRequest)
+        json_body = mapping.add_json_body(UpdateDomainRecordRequest)
 
         json_body.add(
             PrimitiveAttribute(
@@ -64,7 +64,21 @@ class Command(CommandRunner):
                 Union[Unset, None, DomainRecordType],
                 required=False,
                 option_name="type",
-                description="""The type of the DNS record.""",
+                description="""The type of the DNS record.
+
+| Value | Description |
+| ----- | ----------- |
+| A | Map an IPv4 address to a hostname. |
+| AAAA | Map an IPv6 address to a hostname. |
+| CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+| CNAME | Define an alias for your canonical hostname. |
+| MX | Define the mail exchanges that handle mail for the domain. |
+| NS | Define the nameservers that manage the domain. |
+| SOA | The Start of Authority record for the zone. |
+| SRV | Specify a server by hostname and port to handle a service or services. |
+| TXT | Define a string of text that is associated with a hostname. |
+
+""",
             )
         )
 
